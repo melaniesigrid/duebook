@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duebook — Bring customers back before they forget you</title>
+<meta name="description" content="Duebook tracks customer service dates, flags who is due for maintenance or renewal, and drafts reminder emails your team can send in minutes.">
+<meta name="author" content="Northbound Software Studio">
+<meta name="theme-color" content="#0F2540">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Duebook">
+<meta property="og:title" content="Duebook — Bring customers back before they forget you">
+<meta property="og:description" content="Duebook tracks customer service dates, flags who is due for maintenance or renewal, and drafts reminder emails your team can send in minutes.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Duebook — Bring customers back before they forget you">
+<meta name="twitter:description" content="Duebook tracks customer service dates, flags who is due for maintenance or renewal, and drafts reminder emails your team can send in minutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Wix+Madefor+Text:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2F4EF;
+  --card:#FFFFFF;
+  --ink:#0F2540;
+  --ink-soft:#4A5A70;
+  --ink-faint:#7C8AA0;
+  --line:#DFE4DC;
+  --line-card:#E6EAE3;
+  --green:#157344;
+  --green-bg:#E1F2E7;
+  --green-line:#BBDFC8;
+  --amber:#A5650A;
+  --amber-bg:#FBEFD8;
+  --amber-line:#EFD9AD;
+  --blue:#2A5C9C;
+  --blue-bg:#E4EDF8;
+  --slate-bg:#EDF0EB;
+  --cal-red:#C2452D;
+  --navy-deep:#0B1C31;
+  --shadow-sm:0 1px 2px rgba(15,37,64,.06);
+  --shadow-md:0 2px 6px rgba(15,37,64,.07), 0 12px 32px rgba(15,37,64,.08);
+  --shadow-lg:0 4px 10px rgba(15,37,64,.08), 0 24px 60px rgba(15,37,64,.14);
+  --r-sm:8px;
+  --r-md:14px;
+  --r-lg:20px;
+  --font-display:"Bricolage Grotesque", sans-serif;
+  --font-body:"Wix Madefor Text", sans-serif;
+  --font-mono:"Spline Sans Mono", monospace;
+  --w:1120px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.6;
+  font-size:16px;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+/* faint dot grid, like a planner page */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:radial-gradient(rgba(15,37,64,.055) 1px, transparent 1px);
+  background-size:26px 26px;
+  pointer-events:none;
+  z-index:0;
+}
+main{position:relative;z-index:1}
+.wrap{max-width:var(--w);margin:0 auto;padding:0 20px}
+a{color:inherit}
+img{max-width:100%;display:block}
+::selection{background:var(--green);color:#fff}
+
+h1,h2,h3,.display{font-family:var(--font-display);line-height:1.08;letter-spacing:-.02em}
+h1{font-size:clamp(2.4rem,6.4vw,4.1rem);font-weight:800}
+h2{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800;letter-spacing:-.015em}
+h3{font-size:1.12rem;font-weight:700;letter-spacing:-.01em}
+
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--green);
+  display:inline-flex;
+  align-items:center;
+  gap:.55em;
+  margin-bottom:1.1rem;
+}
+.eyebrow::before{
+  content:"";
+  width:9px;height:9px;
+  border:2px solid currentColor;
+  border-radius:50%;
+  flex:none;
+}
+.lede{color:var(--ink-soft);font-size:clamp(1.02rem,2vw,1.16rem);max-width:34em}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:.5em;
+  font-family:var(--font-body);font-weight:600;font-size:.95rem;
+  padding:.85em 1.5em;border-radius:999px;border:1.5px solid transparent;
+  cursor:pointer;text-decoration:none;
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+}
+.btn:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.btn-primary{background:var(--ink);color:#fff;box-shadow:var(--shadow-sm)}
+.btn-primary:hover{background:var(--green);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-primary .arrow{transition:transform .18s ease}
+.btn-primary:hover .arrow{transform:translateX(3px)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:rgba(15,37,64,.28)}
+.btn-ghost:hover{border-color:var(--ink);background:#fff}
+.btn-light{background:#fff;color:var(--ink)}
+.btn-light:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-outline{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+.btn-outline:hover{border-color:#fff;background:rgba(255,255,255,.1);transform:translateY(-2px)}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(242,244,239,.85);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(15,37,64,.08);
+}
+.nav-inner{
+  max-width:var(--w);margin:0 auto;padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--font-display);font-weight:800;font-size:1.22rem;letter-spacing:-.02em}
+.logo-mark{
+  width:30px;height:32px;border-radius:7px;background:#fff;
+  border:1.5px solid var(--ink);
+  display:flex;flex-direction:column;overflow:hidden;flex:none;
+  box-shadow:2px 2px 0 rgba(15,37,64,.9);
+}
+.logo-mark .lm-top{height:9px;background:var(--cal-red)}
+.logo-mark .lm-day{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-weight:600;font-size:.72rem;color:var(--ink);
+}
+.nav-links{display:flex;align-items:center;gap:26px;list-style:none}
+.nav-links a{text-decoration:none;font-size:.92rem;font-weight:500;color:var(--ink-soft);transition:color .15s ease}
+.nav-links a:hover{color:var(--ink)}
+.nav .btn{padding:.6em 1.2em;font-size:.88rem}
+@media(max-width:760px){.nav-links{display:none}}
+
+/* ---------- hero ---------- */
+.hero{padding:64px 0 40px}
+.hero-grid{display:grid;grid-template-columns:1fr;gap:48px;align-items:center}
+@media(min-width:980px){
+  .hero{padding:84px 0 72px}
+  .hero-grid{grid-template-columns:1.05fr .95fr;gap:56px}
+}
+.hero h1{margin-bottom:1.1rem;text-wrap:balance}
+.hero h1 .u{
+  background-image:linear-gradient(rgba(21,115,68,.35),rgba(21,115,68,.35));
+  background-repeat:no-repeat;background-position:0 90%;background-size:0% .14em;
+  box-decoration-break:clone;-webkit-box-decoration-break:clone;
+  animation:draw .8s .9s cubic-bezier(.2,.7,.2,1) forwards;
+}
+@keyframes draw{to{background-size:100% .14em}}
+.hero .lede{margin-bottom:1.9rem}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:1.6rem}
+.hero-note{font-family:var(--font-mono);font-size:.74rem;color:var(--ink-faint);letter-spacing:.02em}
+
+/* page-load stagger */
+.rise{opacity:0;transform:translateY(18px);animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+.rise.d1{animation-delay:.08s}.rise.d2{animation-delay:.18s}.rise.d3{animation-delay:.3s}.rise.d4{animation-delay:.42s}.rise.d5{animation-delay:.55s}
+@keyframes rise{to{opacity:1;transform:none}}
+
+/* ---------- calendar tile (signature motif) ---------- */
+.cal{
+  width:38px;flex:none;border-radius:7px;overflow:hidden;background:#fff;
+  border:1px solid var(--line-card);box-shadow:var(--shadow-sm);
+  text-align:center;font-family:var(--font-mono);
+}
+.cal .cal-m{display:block;font-size:.5rem;font-weight:600;letter-spacing:.12em;color:#fff;background:var(--cal-red);padding:2px 0 1px;text-transform:uppercase}
+.cal .cal-d{display:block;font-size:.98rem;font-weight:600;color:var(--ink);padding:2px 0 3px;line-height:1.1}
+.cal.cal-green .cal-m{background:var(--green)}
+.cal.cal-grey .cal-m{background:var(--ink-faint)}
+
+/* ---------- status chips ---------- */
+.chip{
+  display:inline-flex;align-items:center;gap:.45em;
+  font-family:var(--font-mono);font-size:.66rem;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:.38em .8em;border-radius:999px;white-space:nowrap;
+}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.chip-due{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line)}
+.chip-due::before{animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}
+.chip-soon{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-line)}
+.chip-sent{background:var(--blue-bg);color:var(--blue);border:1px solid #C9DAF0}
+.chip-booked{background:var(--slate-bg);color:var(--ink-soft);border:1px solid var(--line)}
+
+/* ---------- interval bar ---------- */
+.ivl{position:relative;height:5px;border-radius:99px;background:var(--slate-bg);overflow:visible}
+.ivl-fill{
+  position:absolute;inset:0 auto 0 0;width:0;border-radius:99px;
+  background:linear-gradient(90deg,var(--green),#3FA06E);
+  transition:width 1.1s cubic-bezier(.2,.7,.2,1);
+}
+.ivl-fill.amber{background:linear-gradient(90deg,#D89A3B,var(--amber))}
+.ivl-dot{
+  position:absolute;top:50%;right:-2px;transform:translateY(-50%);
+  width:11px;height:11px;border-radius:50%;background:#fff;
+  border:2.5px solid var(--green);
+}
+.ivl-dot.amber{border-color:var(--amber)}
+
+/* ---------- hero mock ---------- */
+.mock-stage{position:relative;min-height:520px}
+@media(max-width:520px){.mock-stage{min-height:0}}
+.mock-card{
+  background:var(--card);border:1px solid var(--line-card);
+  border-radius:var(--r-lg);box-shadow:var(--shadow-lg);
+}
+.duelist{width:min(100%,470px);padding:20px 20px 8px}
+.duelist-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:0 4px 14px;border-bottom:1px solid var(--line-card)}
+.duelist-head h3{font-size:1.02rem}
+.duelist-head .count{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-faint)}
+.duerow{
+  display:grid;grid-template-columns:38px 1fr auto;gap:14px;align-items:center;
+  padding:14px 4px;border-bottom:1px solid var(--line-card);
+}
+.duerow:last-child{border-bottom:0}
+.duerow .who{min-width:0}
+.duerow .who strong{display:block;font-size:.94rem;font-weight:600;letter-spacing:-.01em}
+.duerow .who span{display:block;font-size:.8rem;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.duerow .ivl{margin-top:7px;max-width:180px}
+.email-card{
+  position:absolute;right:0;bottom:-26px;width:min(88%,360px);
+  padding:18px;transform:rotate(1.6deg);
+}
+@media(max-width:979px){
+  .email-card{position:relative;bottom:auto;right:auto;margin:-34px 0 0 auto;transform:rotate(1.2deg)}
+}
+.email-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.email-head .dots{display:flex;gap:5px}
+.email-head .dots i{width:8px;height:8px;border-radius:50%;background:var(--line);display:block}
+.email-head .tag{margin-left:auto;font-family:var(--font-mono);font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--green);background:var(--green-bg);padding:.3em .7em;border-radius:99px}
+.email-line{font-size:.8rem;color:var(--ink-soft);padding:6px 0;border-bottom:1px dashed var(--line-card)}
+.email-line b{color:var(--ink);font-weight:600}
+.email-body{font-size:.82rem;color:var(--ink-soft);padding:12px 2px 4px;line-height:1.55}
+.email-actions{display:flex;gap:8px;margin-top:12px}
+.mini-btn{
+  font-family:var(--font-body);font-size:.78rem;font-weight:600;
+  padding:.55em 1.1em;border-radius:99px;cursor:pointer;
+  border:1.5px solid rgba(15,37,64,.22);background:#fff;color:var(--ink);
+  transition:background .15s ease,color .15s ease;
+}
+.mini-btn.solid{background:var(--green);border-color:var(--green);color:#fff}
+.mini-btn.solid:hover{background:#0F5C36}
+.mini-btn:not(.solid):hover{background:var(--slate-bg)}
+
+/* torn tear-off edge under the due list, like a desk calendar page */
+.tear{
+  width:min(100%,470px);height:14px;margin-top:-2px;
+  background:
+    linear-gradient(-45deg, transparent 7px, var(--card) 0) 0 0/14px 100% repeat-x,
+    linear-gradient(45deg, transparent 7px, var(--card) 0) 7px 0/14px 100% repeat-x;
+  filter:drop-shadow(0 10px 12px rgba(15,37,64,.1));
+}
+
+/* ---------- sections ---------- */
+section{padding:76px 0}
+@media(min-width:980px){section{padding:104px 0}}
+.section-head{max-width:620px;margin-bottom:52px}
+.section-head.center{margin-left:auto;margin-right:auto;text-align:center}
+.section-head.center .eyebrow{justify-content:center}
+.section-head h2{margin-bottom:.8rem;text-wrap:balance}
+
+/* scroll reveal */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+.rv.dl1{transition-delay:.08s}.rv.dl2{transition-delay:.16s}.rv.dl3{transition-delay:.24s}.rv.dl4{transition-delay:.32s}.rv.dl5{transition-delay:.4s}
+
+/* ---------- problem ---------- */
+.problem{background:var(--navy-deep);color:#EAF0F6;position:relative;overflow:hidden}
+.problem::before{
+  content:"";position:absolute;inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size:26px 26px;
+}
+.problem .wrap{position:relative}
+.problem .eyebrow{color:#7FC9A0}
+.problem h2{color:#fff}
+.problem-grid{display:grid;grid-template-columns:1fr;gap:40px}
+@media(min-width:900px){.problem-grid{grid-template-columns:.9fr 1.1fr;gap:72px;align-items:start}}
+.problem-intro{color:#A9B8C9;font-size:1.05rem;max-width:30em}
+.leaks{list-style:none;display:flex;flex-direction:column}
+.leak{
+  display:flex;gap:18px;align-items:flex-start;
+  padding:20px 4px;border-bottom:1px solid rgba(255,255,255,.12);
+}
+.leak:first-child{border-top:1px solid rgba(255,255,255,.12)}
+.leak .x{
+  flex:none;width:26px;height:26px;border-radius:50%;margin-top:2px;
+  border:1.5px solid rgba(255,255,255,.3);color:#F0A8A8;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:.78rem;
+}
+.leak p{color:#D6DEE7;font-size:.98rem}
+.leak p b{color:#fff;font-weight:600}
+
+/* ---------- outcome cards ---------- */
+.grid-4{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:640px){.grid-4{grid-template-columns:1fr 1fr}}
+@media(min-width:1020px){.grid-4{grid-template-columns:repeat(4,1fr)}}
+.o-card{
+  background:var(--card);border:1px solid var(--line-card);border-radius:var(--r-md);
+  padding:26px 22px;box-shadow:var(--shadow-sm);
+  transition:transform .22s ease, box-shadow .22s ease;
+}
+.o-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-md)}
+.o-card .glyph{margin-bottom:18px}
+.o-card h3{margin-bottom:.5rem;font-size:1.04rem}
+.o-card p{font-size:.9rem;color:var(--ink-soft)}
+.glyph{
+  width:42px;height:42px;border-radius:11px;background:var(--green-bg);
+  border:1px solid var(--green-line);
+  display:flex;align-items:center;justify-content:center;color:var(--green);
+}
+.glyph svg{width:20px;height:20px}
+
+/* ---------- how it works ---------- */
+.steps{display:grid;grid-template-columns:1fr;gap:14px;counter-reset:step}
+@media(min-width:900px){.steps{grid-template-columns:repeat(4,1fr);gap:18px}}
+.step{
+  position:relative;background:var(--card);border:1px solid var(--line-card);
+  border-radius:var(--r-md);padding:26px 22px 24px;box-shadow:var(--shadow-sm);
+}
+.step::before{
+  counter-increment:step;content:counter(step,decimal-leading-zero);
+  font-family:var(--font-mono);font-size:.72rem;font-weight:600;letter-spacing:.1em;
+  color:var(--green);display:block;margin-bottom:14px;
+}
+.step h3{font-size:1rem;margin-bottom:.45rem}
+.step p{font-size:.88rem;color:var(--ink-soft)}
+@media(min-width:900px){
+  .step:not(:last-child)::after{
+    content:"";position:absolute;top:50%;right:-19px;width:20px;height:2px;
+    background-image:linear-gradient(90deg,var(--ink-faint) 55%,transparent 0);
+    background-size:6px 2px;z-index:2;
+  }
+}
+
+/* ---------- dashboard ---------- */
+.dash{
+  background:var(--card);border:1px solid var(--line-card);border-radius:var(--r-lg);
+  box-shadow:var(--shadow-lg);overflow:hidden;
+}
+.dash-top{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:16px 22px;border-bottom:1px solid var(--line-card);background:#FBFCFA;
+}
+.dash-top .title{font-family:var(--font-display);font-weight:700;font-size:.98rem;letter-spacing:-.01em}
+.dash-tabs{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.dash-tab{
+  font-family:var(--font-mono);font-size:.66rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding:.45em .95em;border-radius:99px;border:1px solid var(--line);color:var(--ink-soft);background:#fff;
+}
+.dash-tab.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.dash-cols{
+  display:grid;grid-template-columns:44px 1.3fr 1fr .8fr .9fr;gap:14px;
+  padding:10px 22px;border-bottom:1px solid var(--line-card);
+  font-family:var(--font-mono);font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);
+}
+.dash-row{
+  display:grid;grid-template-columns:44px 1.3fr 1fr .8fr .9fr;gap:14px;align-items:center;
+  padding:16px 22px;border-bottom:1px solid var(--line-card);
+}
+.dash-row .who strong{display:block;font-size:.93rem;font-weight:600}
+.dash-row .who span{font-size:.78rem;color:var(--ink-soft)}
+.dash-row .svc,.dash-row .last{font-size:.85rem;color:var(--ink-soft)}
+.dash-row .last{font-family:var(--font-mono);font-size:.76rem}
+.dash-row .chipcell{justify-self:start}
+@media(max-width:760px){
+  .dash-cols{display:none}
+  .dash-row{grid-template-columns:38px 1fr auto;row-gap:6px}
+  .dash-row .svc{grid-column:2}
+  .dash-row .last{display:none}
+}
+.dash-expand{background:#F8FAF7;border-bottom:1px solid var(--line-card);padding:20px 22px}
+.expand-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:760px){.expand-grid{grid-template-columns:1.1fr .9fr;gap:22px}}
+.expand-card{background:#fff;border:1px solid var(--line-card);border-radius:var(--r-md);padding:16px;box-shadow:var(--shadow-sm)}
+.expand-card .label{font-family:var(--font-mono);font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-bottom:10px}
+.expand-card .note{font-size:.85rem;color:var(--ink-soft);line-height:1.55}
+.dash-foot{padding:12px 22px;font-family:var(--font-mono);font-size:.68rem;color:var(--ink-faint);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+/* ---------- before / after ---------- */
+.ba-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:860px){.ba-grid{grid-template-columns:1fr 1fr;gap:22px}}
+.ba{
+  border-radius:var(--r-lg);padding:34px 30px;position:relative;overflow:hidden;
+}
+.ba .tag{
+  font-family:var(--font-mono);font-size:.66rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  display:inline-block;padding:.4em .9em;border-radius:99px;margin-bottom:18px;
+}
+.ba p{font-size:clamp(1.05rem,1.8vw,1.25rem);line-height:1.5;font-weight:500;letter-spacing:-.01em}
+.ba-before{background:var(--slate-bg);border:1px solid var(--line);color:var(--ink-soft)}
+.ba-before .tag{background:#fff;color:var(--ink-faint);border:1px solid var(--line)}
+.ba-before p{text-decoration-color:rgba(15,37,64,.25)}
+.ba-after{background:var(--navy-deep);color:#EAF2ED}
+.ba-after .tag{background:rgba(127,201,160,.15);color:#7FC9A0;border:1px solid rgba(127,201,160,.35)}
+.ba-after::after{
+  content:"";position:absolute;right:-40px;bottom:-40px;width:180px;height:180px;border-radius:50%;
+  border:1.5px dashed rgba(127,201,160,.3);
+}
+
+/* ---------- included ---------- */
+.inc-grid{display:grid;grid-template-columns:1fr;gap:0 40px}
+@media(min-width:640px){.inc-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:980px){.inc-grid{grid-template-columns:1fr 1fr 1fr}}
+.inc{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:18px 2px;border-bottom:1px solid var(--line);
+}
+.inc .tick{
+  flex:none;width:22px;height:22px;border-radius:50%;margin-top:2px;
+  background:var(--green-bg);border:1px solid var(--green-line);color:var(--green);
+  display:flex;align-items:center;justify-content:center;
+}
+.inc .tick svg{width:11px;height:11px}
+.inc p{font-size:.95rem;font-weight:500}
+.inc p span{display:block;font-weight:400;font-size:.83rem;color:var(--ink-soft)}
+
+/* ---------- niches ---------- */
+.niche-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:640px){.niche-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:1020px){.niche-grid{grid-template-columns:1fr 1fr 1fr}}
+.niche{
+  background:var(--card);border:1px solid var(--line-card);border-radius:var(--r-md);
+  padding:24px 22px;box-shadow:var(--shadow-sm);
+  transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+.niche:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);border-color:var(--green-line)}
+.niche-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.niche-top h3{font-size:1rem}
+.niche p{font-size:.87rem;color:var(--ink-soft)}
+.niche .glyph{width:38px;height:38px;border-radius:10px}
+.niche .glyph svg{width:18px;height:18px}
+
+/* ---------- CTA band ---------- */
+.cta-band{padding:0}
+.cta-inner{
+  background:var(--green);color:#fff;border-radius:var(--r-lg);
+  padding:60px 28px;text-align:center;position:relative;overflow:hidden;
+  box-shadow:var(--shadow-lg);
+}
+@media(min-width:900px){.cta-inner{padding:84px 60px}}
+.cta-inner::before,.cta-inner::after{
+  content:"";position:absolute;border-radius:50%;border:1.5px dashed rgba(255,255,255,.28);
+}
+.cta-inner::before{width:300px;height:300px;left:-110px;top:-110px}
+.cta-inner::after{width:220px;height:220px;right:-70px;bottom:-90px}
+.cta-inner h2{color:#fff;margin-bottom:1.4rem;position:relative}
+.cta-inner .btn{position:relative}
+.cta-actions{position:relative;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.cta-micro{position:relative;margin-top:1.2rem;font-size:.85rem;color:rgba(255,255,255,.85);max-width:34em;margin-left:auto;margin-right:auto}
+
+/* ---------- FAQ ---------- */
+.faq-list{max-width:720px;margin:0 auto}
+.faq{border-bottom:1px solid var(--line)}
+.faq summary{
+  list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:18px;
+  padding:22px 4px;font-weight:600;font-size:1rem;letter-spacing:-.01em;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .plus{
+  flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(15,37,64,.25);
+  position:relative;transition:transform .3s ease, background .2s ease, border-color .2s ease;
+}
+.faq summary .plus::before,.faq summary .plus::after{
+  content:"";position:absolute;background:var(--ink);top:50%;left:50%;
+}
+.faq summary .plus::before{width:10px;height:1.5px;transform:translate(-50%,-50%)}
+.faq summary .plus::after{width:1.5px;height:10px;transform:translate(-50%,-50%)}
+.faq[open] summary .plus{transform:rotate(45deg);background:var(--green);border-color:var(--green)}
+.faq[open] summary .plus::before,.faq[open] summary .plus::after{background:#fff}
+.faq .a{padding:0 40px 24px 4px;color:var(--ink-soft);font-size:.94rem;max-width:56em}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:36px 0 44px;position:relative;z-index:1}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.foot small{font-family:var(--font-mono);font-size:.7rem;color:var(--ink-faint);letter-spacing:.02em}
+.foot-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;text-align:right}
+.foot-right a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid transparent;transition:color .18s ease, border-color .18s ease}
+.foot-right a:hover{color:var(--green);border-bottom-color:var(--green)}
+.made-by{font-family:var(--font-mono);font-size:.7rem;color:var(--ink-faint);letter-spacing:.02em}
+.made-by a{color:var(--ink);font-weight:600}
+.foot-links{display:flex;gap:16px;font-size:.8rem}
+@media(max-width:640px){.foot-right{align-items:flex-start;text-align:left}}
+.foot .logo{font-size:1rem}
+.foot .logo .logo-mark{width:24px;height:26px;box-shadow:1.5px 1.5px 0 rgba(15,37,64,.9)}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s !important;animation-delay:0s !important;transition-duration:.001s !important}
+  html{scroll-behavior:auto}
+  .rv,.rise{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="#top" aria-label="Duebook home">
+      <span class="logo-mark" aria-hidden="true"><span class="lm-top"></span><span class="lm-day" id="logoDay">7</span></span>
+      Duebook
+    </a>
+    <ul class="nav-links">
+      <li><a href="#flow">How it works</a></li>
+      <li><a href="#dashboard">The due list</a></li>
+      <li><a href="#niches">Who it's for</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a class="btn btn-primary" href="#demo">Request a demo</a>
+  </div>
+</nav>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow rise">The repeat-customer engine</p>
+      <h1 class="rise d1">Bring customers back <span class="u">before they forget you.</span></h1>
+      <p class="lede rise d2">Duebook tracks customer service dates, flags who is due for maintenance or renewal, and drafts reminder emails your team can send in minutes.</p>
+      <div class="hero-ctas rise d3">
+        <a class="btn btn-primary" href="#demo">Request a demo <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <a class="btn btn-ghost" href="#flow">See the reminder flow</a>
+      </div>
+      <p class="hero-note rise d4">Your team reviews every reminder before it goes out.</p>
+    </div>
+
+    <div class="mock-stage rise d4" aria-label="Product preview: a due list with a drafted reminder email">
+      <div class="mock-card duelist">
+        <div class="duelist-head">
+          <h3>Due this week</h3>
+          <span class="count">4 of 212 customers</span>
+        </div>
+
+        <div class="duerow">
+          <div class="cal cal-green"><span class="cal-m">Aug</span><span class="cal-d">08</span></div>
+          <div class="who">
+            <strong>Dana Okafor</strong>
+            <span>Furnace tune-up · last visit Oct 12</span>
+            <div class="ivl"><div class="ivl-fill" data-p="100"></div><span class="ivl-dot"></span></div>
+          </div>
+          <span class="chip chip-due">Due now</span>
+        </div>
+
+        <div class="duerow">
+          <div class="cal"><span class="cal-m">Aug</span><span class="cal-d">14</span></div>
+          <div class="who">
+            <strong>Marcus Reid</strong>
+            <span>Oil change + rotation · last visit Feb 14</span>
+            <div class="ivl"><div class="ivl-fill amber" data-p="86"></div><span class="ivl-dot amber" style="right:14%"></span></div>
+          </div>
+          <span class="chip chip-soon">Coming due</span>
+        </div>
+
+        <div class="duerow">
+          <div class="cal cal-grey"><span class="cal-m">Aug</span><span class="cal-d">21</span></div>
+          <div class="who">
+            <strong>Priya Sharma</strong>
+            <span>Hygiene recall · last visit Feb 21</span>
+          </div>
+          <span class="chip chip-sent">Reminder sent</span>
+        </div>
+
+        <div class="duerow">
+          <div class="cal cal-grey"><span class="cal-m">Sep</span><span class="cal-d">01</span></div>
+          <div class="who">
+            <strong>Tom Ellis</strong>
+            <span>Membership renewal · joined Sep 2024</span>
+          </div>
+          <span class="chip chip-booked">Booked</span>
+        </div>
+      </div>
+      <div class="tear" aria-hidden="true"></div>
+
+      <div class="mock-card email-card">
+        <div class="email-head">
+          <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="tag">Draft ready</span>
+        </div>
+        <p class="email-line"><b>To:</b> Dana Okafor</p>
+        <p class="email-line"><b>Subject:</b> Your furnace is due for its fall tune-up</p>
+        <p class="email-body">Hi Dana — it's been about ten months since your last furnace service. Fall slots fill up fast, so we'd love to get you on the books before the cold sets in&hellip;</p>
+        <div class="email-actions">
+          <button class="mini-btn" type="button">Edit draft</button>
+          <button class="mini-btn solid" type="button">Send reminder</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ PROBLEM ============ -->
+<section class="problem">
+  <div class="wrap">
+    <div class="problem-grid">
+      <div class="rv">
+        <p class="eyebrow">The leak</p>
+        <h2>Repeat revenue leaks when follow-up lives in memory.</h2>
+        <p class="problem-intro" style="margin-top:1rem">Most service businesses don't lose customers to competitors. They lose them to silence — the follow-up that never got sent.</p>
+      </div>
+      <ul class="leaks">
+        <li class="leak rv dl1"><span class="x" aria-hidden="true">&times;</span><p><b>Service dates are scattered</b> across paper notes, personal calendars, and old email threads.</p></li>
+        <li class="leak rv dl2"><span class="x" aria-hidden="true">&times;</span><p><b>Staff forget who is due</b> for maintenance — there's no single list anyone owns.</p></li>
+        <li class="leak rv dl3"><span class="x" aria-hidden="true">&times;</span><p><b>Renewal reminders go out late</b> or not at all, so contracts quietly lapse.</p></li>
+        <li class="leak rv dl4"><span class="x" aria-hidden="true">&times;</span><p><b>Past customers only return when they remember</b> — and someone else's ad usually gets there first.</p></li>
+        <li class="leak rv dl5"><span class="x" aria-hidden="true">&times;</span><p><b>Nobody owns the reminder loop</b>, so the easiest revenue in the business walks out the door.</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OUTCOME ============ -->
+<section>
+  <div class="wrap">
+    <div class="section-head rv">
+      <p class="eyebrow">What you get</p>
+      <h2>A simple list of who needs a reminder next.</h2>
+      <p class="lede">No fields nobody updates. No pipeline stages. Just the loop that brings customers back.</p>
+    </div>
+    <div class="grid-4">
+      <div class="o-card rv">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M21 11h-6"/><path d="M18 8v6"/></svg></div>
+        <h3>Knows every customer</h3>
+        <p>Tracks each customer and their last service date, so the history lives in one place — not in someone's head.</p>
+      </div>
+      <div class="o-card rv dl1">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/></svg></div>
+        <h3>Flags what's due</h3>
+        <p>Maintenance, renewal, recall, or rebooking — every due date gets flagged before it slips past.</p>
+      </div>
+      <div class="o-card rv dl2">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="m22 6-10 7L2 6"/></svg></div>
+        <h3>Drafts the reminder</h3>
+        <p>A personalized reminder email is drafted for each customer, ready for your team to review and send.</p>
+      </div>
+      <div class="o-card rv dl3">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg></div>
+        <h3>Tracks the follow-up</h3>
+        <p>Sent, booked, snoozed — every customer has a status, so nobody falls through the cracks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ HOW IT WORKS ============ -->
+<section id="flow" style="padding-top:20px">
+  <div class="wrap">
+    <div class="section-head rv">
+      <p class="eyebrow">The reminder flow</p>
+      <h2>Set the interval once. Duebook watches the calendar.</h2>
+    </div>
+    <div class="steps">
+      <div class="step rv"><h3>Add your customers</h3><p>Add or import customer records with their last service dates. A spreadsheet is all you need to start.</p></div>
+      <div class="step rv dl1"><h3>Set the interval</h3><p>Six-month oil change, annual furnace service, nine-month hygiene recall — set the cycle for each service type.</p></div>
+      <div class="step rv dl2"><h3>See who's due</h3><p>Duebook shows customers due now or coming due soon, sorted so the most overdue are on top.</p></div>
+      <div class="step rv dl3"><h3>Review and send</h3><p>Your team reads the drafted reminder, tweaks it if they want, and sends. Nothing goes out without a person saying so.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DASHBOARD ============ -->
+<section id="dashboard" style="padding-top:12px">
+  <div class="wrap">
+    <div class="section-head rv">
+      <p class="eyebrow">The due list</p>
+      <h2>Open it in the morning. Know exactly who to contact.</h2>
+      <p class="lede">One screen for the front desk: who's due, why they're due, and the email that's ready to go.</p>
+    </div>
+
+    <div class="dash rv" role="img" aria-label="Duebook dashboard mockup showing a customer due list with statuses, an expanded reminder draft, and visit notes">
+      <div class="dash-top">
+        <span class="title">Customers · Meridian Heating &amp; Air</span>
+        <div class="dash-tabs">
+          <span class="dash-tab on">Due now</span>
+          <span class="dash-tab">Coming due</span>
+          <span class="dash-tab">All customers</span>
+        </div>
+      </div>
+
+      <div class="dash-cols"><span></span><span>Customer</span><span>Service</span><span>Last visit</span><span>Status</span></div>
+
+      <div class="dash-row">
+        <div class="cal cal-green"><span class="cal-m">Aug</span><span class="cal-d">08</span></div>
+        <div class="who"><strong>Dana Okafor</strong><span>dana.o@example.com</span></div>
+        <span class="svc">Furnace tune-up</span>
+        <span class="last">Oct 12, 2025</span>
+        <span class="chipcell"><span class="chip chip-due">Due now</span></span>
+      </div>
+
+      <div class="dash-expand">
+        <div class="expand-grid">
+          <div class="expand-card">
+            <span class="label">Reminder draft</span>
+            <p class="email-line"><b>Subject:</b> Your furnace is due for its fall tune-up</p>
+            <p class="email-body">Hi Dana — it's been about ten months since your last furnace service. Fall slots fill up fast, so we'd love to get you on the books before the cold sets in. Reply here or call us and we'll find a time that works.</p>
+            <div class="email-actions">
+              <button class="mini-btn" type="button">Edit draft</button>
+              <button class="mini-btn" type="button">Snooze 2 weeks</button>
+              <button class="mini-btn solid" type="button">Send reminder</button>
+            </div>
+          </div>
+          <div class="expand-card">
+            <span class="label">Notes from last visit</span>
+            <p class="note">Replaced filter, flagged the blower motor as aging — quoted a replacement for next season. Prefers morning appointments. Has a dog, likes a heads-up call before arrival.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-row">
+        <div class="cal"><span class="cal-m">Aug</span><span class="cal-d">14</span></div>
+        <div class="who"><strong>Marcus Reid</strong><span>m.reid@example.com</span></div>
+        <span class="svc">AC seasonal service</span>
+        <span class="last">Feb 14, 2026</span>
+        <span class="chipcell"><span class="chip chip-soon">Coming due</span></span>
+      </div>
+
+      <div class="dash-row">
+        <div class="cal cal-grey"><span class="cal-m">Aug</span><span class="cal-d">21</span></div>
+        <div class="who"><strong>Priya Sharma</strong><span>priya.s@example.com</span></div>
+        <span class="svc">Filter replacement</span>
+        <span class="last">May 21, 2026</span>
+        <span class="chipcell"><span class="chip chip-sent">Reminder sent</span></span>
+      </div>
+
+      <div class="dash-row" style="border-bottom:0">
+        <div class="cal cal-grey"><span class="cal-m">Sep</span><span class="cal-d">01</span></div>
+        <div class="who"><strong>Tom Ellis</strong><span>tellis@example.com</span></div>
+        <span class="svc">Annual maintenance plan</span>
+        <span class="last">Sep 1, 2025</span>
+        <span class="chipcell"><span class="chip chip-booked">Booked</span></span>
+      </div>
+
+      <div class="dash-foot"><span>212 customers · 9 due now · 14 coming due</span><span>Sorted by most overdue</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BEFORE / AFTER ============ -->
+<section style="padding-top:12px">
+  <div class="wrap">
+    <div class="ba-grid">
+      <div class="ba ba-before rv">
+        <span class="tag">Before Duebook</span>
+        <p>Customers vanish after the job. Renewal dates get missed. Maintenance follow-up depends on whoever remembers.</p>
+      </div>
+      <div class="ba ba-after rv dl1">
+        <span class="tag">After Duebook</span>
+        <p>Every customer has a next due date, a reminder status, and a ready-to-send email when it's time to come back.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INCLUDED ============ -->
+<section>
+  <div class="wrap">
+    <div class="section-head rv">
+      <p class="eyebrow">What's included</p>
+      <h2>Everything the reminder loop needs. Nothing it doesn't.</h2>
+    </div>
+    <div class="inc-grid">
+      <div class="inc rv"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>Customer database<span>Names, contact details, and service history in one place.</span></p></div>
+      <div class="inc rv dl1"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>Service &amp; renewal date tracking<span>Every visit, contract, and membership has a next date.</span></p></div>
+      <div class="inc rv dl2"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>Custom maintenance intervals<span>Different cycles for different service types.</span></p></div>
+      <div class="inc rv"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>Due-now and coming-due views<span>Today's list and the next few weeks, at a glance.</span></p></div>
+      <div class="inc rv dl1"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>Personalized reminder drafts<span>Written per customer, edited and sent by your team.</span></p></div>
+      <div class="inc rv dl2"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>Reminder status tracking<span>Sent, booked, snoozed — the loop always closes.</span></p></div>
+      <div class="inc rv"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>Simple notes on each customer<span>What happened last visit, and what to remember next time.</span></p></div>
+      <div class="inc rv dl1"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>Import &amp; export<span>Bring customers in from a spreadsheet, take them out anytime.</span></p></div>
+      <div class="inc rv dl2"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>Business settings for service cycles<span>Your services, your intervals, your reminder style.</span></p></div>
+    </div>
+  </div>
+</section>
+<!-- ============ NICHES ============ -->
+<section id="niches" style="padding-top:12px">
+  <div class="wrap">
+    <div class="section-head rv">
+      <p class="eyebrow">Who it's for</p>
+      <h2>If your customers should come back, Duebook fits.</h2>
+      <p class="lede">Any business with maintenance cycles, renewal dates, service intervals, or repeat appointments.</p>
+    </div>
+    <div class="niche-grid">
+      <div class="niche rv">
+        <div class="niche-top"><span class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 16.5V13a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v3.5"/><path d="M5 17h14v-5.5l-1.4-4.2A2 2 0 0 0 15.7 6H8.3a2 2 0 0 0-1.9 1.3L5 11.5Z"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/></svg></span><h3>Auto shops</h3></div>
+        <p>Oil change, tire rotation, inspection, and maintenance reminders based on each car's last visit.</p>
+      </div>
+      <div class="niche rv dl1">
+        <div class="niche-top"><span class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.5"/></svg></span><h3>HVAC companies</h3></div>
+        <p>Seasonal service, filter replacement, and annual maintenance reminders — timed to each home's cycle.</p>
+      </div>
+      <div class="niche rv dl2">
+        <div class="niche-top"><span class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5c-2-2.2-5.5-2.4-7 0-1.6 2.6-.3 5.5 1 8 1.1 2.1 2 5 3.5 5s1.6-2.5 2.5-2.5 1 2.5 2.5 2.5 2.4-2.9 3.5-5c1.3-2.5 2.6-5.4 1-8-1.5-2.4-5-2.2-7 0Z"/></svg></span><h3>Dentists</h3></div>
+        <p>Hygiene recall and treatment follow-up reminders that go out on schedule, not when the front desk has a quiet day.</p>
+      </div>
+      <div class="niche rv">
+        <div class="niche-top"><span class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4-3.5 7-7.2 7-11a7 7 0 0 0-14 0c0 3.8 3 7.5 7 11Z"/><path d="M9.5 10c.6 1.5 1.4 2 2.5 2s1.9-.5 2.5-2"/></svg></span><h3>Med spas</h3></div>
+        <p>Treatment plan, membership, and package renewal reminders tied to each client's schedule.</p>
+      </div>
+      <div class="niche rv dl1">
+        <div class="niche-top"><span class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5 5 19"/><path d="M8.5 4a4.5 4.5 0 0 0 0 9H10"/><path d="M15.5 20a4.5 4.5 0 0 0 0-9H14"/></svg></span><h3>Pest control</h3></div>
+        <p>Recurring treatment and contract renewal reminders, so protected homes stay protected — and under contract.</p>
+      </div>
+      <div class="niche rv dl2">
+        <div class="niche-top"><span class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg></span><h3>Gyms &amp; memberships</h3></div>
+        <p>Membership renewal reminders, plus check-ins for members who've gone quiet before they cancel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA BAND ============ -->
+<section class="cta-band" id="demo">
+  <div class="wrap">
+    <div class="cta-inner rv">
+      <h2>Turn past customers into the next booking list.</h2>
+      <div class="cta-actions">
+        <a class="btn btn-light" href="https://cal.com/northboundsoftwarestudio/scope-call" target="_blank" rel="noopener">Book a scope call <span aria-hidden="true">&rarr;</span></a>
+        <a class="btn btn-outline" href="mailto:hello@northboundsoftwarestudio.com?subject=Duebook%20demo%20request">hello@northboundsoftwarestudio.com</a>
+      </div>
+      <p class="cta-micro">Customized around your customer records, service intervals, renewal dates, and reminder style.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head center rv">
+      <p class="eyebrow">Questions</p>
+      <h2>The things owners ask first.</h2>
+    </div>
+    <div class="faq-list rv">
+      <details class="faq">
+        <summary>Can we import our existing customers?<span class="plus" aria-hidden="true"></span></summary>
+        <p class="a">Yes. Bring in a spreadsheet export from your current system — names, contact details, last service dates — and Duebook builds the due list from it. You can export everything back out at any time.</p>
+      </details>
+      <details class="faq">
+        <summary>Can we set different reminder intervals by service type?<span class="plus" aria-hidden="true"></span></summary>
+        <p class="a">Yes. Each service type gets its own cycle — a six-month oil change and an annual inspection can live on the same customer with separate due dates.</p>
+      </details>
+      <details class="faq">
+        <summary>Does it send emails automatically?<span class="plus" aria-hidden="true"></span></summary>
+        <p class="a">No — and that's on purpose. Duebook drafts the reminder; your team reviews it and hits send. Nothing goes to a customer without a person approving it.</p>
+      </details>
+      <details class="faq">
+        <summary>Can staff review reminders before sending?<span class="plus" aria-hidden="true"></span></summary>
+        <p class="a">Always. Every reminder starts as a draft. Staff can edit the wording, snooze it, or skip it entirely. The due list tracks what's been reviewed and what's still waiting.</p>
+      </details>
+      <details class="faq">
+        <summary>Can it track renewals and maintenance due dates?<span class="plus" aria-hidden="true"></span></summary>
+        <p class="a">Yes — both. Renewals track contract or membership end dates; maintenance tracks intervals from the last service. Each shows up in the same due list with its own reason.</p>
+      </details>
+      <details class="faq">
+        <summary>Does it replace our CRM?<span class="plus" aria-hidden="true"></span></summary>
+        <p class="a">It doesn't try to. Duebook does one job: it tells you who is due, why they're due, and what reminder to send. If you already run a CRM, Duebook sits beside it and owns the reminder loop.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a class="logo" href="#top" aria-label="Duebook home">
+      <span class="logo-mark" aria-hidden="true"><span class="lm-top"></span><span class="lm-day">7</span></span>
+      Duebook
+    </a>
+    <div class="foot-right">
+      <div class="foot-links">
+        <a href="https://cal.com/northboundsoftwarestudio/scope-call" target="_blank" rel="noopener">Book a scope call</a>
+        <a href="mailto:hello@northboundsoftwarestudio.com?subject=Duebook%20demo%20request">hello@northboundsoftwarestudio.com</a>
+      </div>
+      <small>&copy; 2026 Duebook · The repeat-customer engine for service businesses</small>
+      <p class="made-by">Made by <a href="https://northboundsoftwarestudio.com" target="_blank" rel="noopener">Northbound Software Studio</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // today's date in the tear-off logo
+  var d = new Date().getDate();
+  document.querySelectorAll('.lm-day').forEach(function(el){ el.textContent = d; });
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // scroll reveals
+  var revealed = document.querySelectorAll('.rv');
+  if (reduce || !('IntersectionObserver' in window)) {
+    revealed.forEach(function(el){ el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.14, rootMargin: '0px 0px -40px 0px' });
+    revealed.forEach(function(el){ io.observe(el); });
+  }
+
+  // interval bars fill once visible
+  var bars = document.querySelectorAll('.ivl-fill');
+  function fill(el){ el.style.width = (el.dataset.p || 0) + '%'; }
+  if (reduce || !('IntersectionObserver' in window)) {
+    bars.forEach(fill);
+  } else {
+    var bio = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) { fill(e.target); bio.unobserve(e.target); }
+      });
+    }, { threshold: 0.4 });
+    bars.forEach(function(el){ bio.observe(el); });
+  }
+})();
+</script>
+</body>
+</html>
