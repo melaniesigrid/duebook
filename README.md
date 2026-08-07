@@ -29,8 +29,14 @@ remembering the last one.
 | File | Purpose |
 | --- | --- |
 | `index.html` | The entire site — markup, styles, and scripts in one self-contained file |
+| `404.html` | Not-found page, styled to match |
+| `og-image.jpg` | 1200×630 share card for link previews |
 | `favicon.svg` | Tear-off calendar mark used as the browser icon |
+| `apple-touch-icon.png`, `icon-192.png`, `icon-512.png` | Home-screen and PWA icons |
+| `site.webmanifest` | Web app manifest (name, icons, theme colors) |
+| `robots.txt`, `sitemap.xml` | Crawler directives |
 | `.nojekyll` | Tells GitHub Pages to serve files as-is, without Jekyll processing |
+| `_dev/` | Sources the images are rendered from — see [`_dev/README.md`](_dev/README.md) |
 
 There is no build step and there are no dependencies. Fonts load from Google Fonts;
 everything else is local.

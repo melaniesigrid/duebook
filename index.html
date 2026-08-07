@@ -8,15 +8,40 @@
 <meta name="author" content="Northbound Software Studio">
 <meta name="theme-color" content="#0F2540">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
 <link rel="canonical" href="https://melaniesigrid.github.io/duebook/">
+<meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://melaniesigrid.github.io/duebook/">
 <meta property="og:site_name" content="Duebook">
 <meta property="og:title" content="Duebook — Bring customers back before they forget you">
 <meta property="og:description" content="Duebook tracks customer service dates, flags who is due for maintenance or renewal, and drafts reminder emails your team can send in minutes.">
+<meta property="og:image" content="https://melaniesigrid.github.io/duebook/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Duebook — a due list showing customers who are due for service, with overdue and due-soon flags.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Duebook — Bring customers back before they forget you">
 <meta name="twitter:description" content="Duebook tracks customer service dates, flags who is due for maintenance or renewal, and drafts reminder emails your team can send in minutes.">
+<meta name="twitter:image" content="https://melaniesigrid.github.io/duebook/og-image.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Duebook",
+  "applicationCategory": "BusinessApplication",
+  "url": "https://melaniesigrid.github.io/duebook/",
+  "image": "https://melaniesigrid.github.io/duebook/og-image.jpg",
+  "description": "Duebook tracks customer service dates, flags who is due for maintenance or renewal, and drafts reminder emails your team can send in minutes.",
+  "creator": {
+    "@type": "Organization",
+    "name": "Northbound Software Studio",
+    "url": "https://northboundsoftwarestudio.com",
+    "email": "hello@northboundsoftwarestudio.com"
+  }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Wix+Madefor+Text:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -470,6 +495,10 @@ section{padding:76px 0}
 .cta-inner h2{color:#fff;margin-bottom:1.4rem;position:relative}
 .cta-inner .btn{position:relative}
 .cta-actions{position:relative;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+@media(max-width:460px){
+  .cta-actions .btn{width:100%;justify-content:center}
+  .cta-actions .btn-outline{font-size:.82rem;padding-left:1em;padding-right:1em;overflow-wrap:anywhere}
+}
 .cta-micro{position:relative;margin-top:1.2rem;font-size:.85rem;color:rgba(255,255,255,.85);max-width:34em;margin-left:auto;margin-right:auto}
 
 /* ---------- FAQ ---------- */
@@ -502,8 +531,9 @@ footer{border-top:1px solid var(--line);padding:36px 0 44px;position:relative;z-
 .foot-right a:hover{color:var(--green);border-bottom-color:var(--green)}
 .made-by{font-family:var(--font-mono);font-size:.7rem;color:var(--ink-faint);letter-spacing:.02em}
 .made-by a{color:var(--ink);font-weight:600}
-.foot-links{display:flex;gap:16px;font-size:.8rem}
-@media(max-width:640px){.foot-right{align-items:flex-start;text-align:left}}
+.foot-links{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px 16px;font-size:.8rem}
+.foot-links a{overflow-wrap:anywhere}
+@media(max-width:640px){.foot-right{align-items:flex-start;text-align:left}.foot-links{justify-content:flex-start}}
 .foot .logo{font-size:1rem}
 .foot .logo .logo-mark{width:24px;height:26px;box-shadow:1.5px 1.5px 0 rgba(15,37,64,.9)}
 

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!--
+  Duebook app icon source — rendered at 512x512, then downsampled to
+  icon-512.png, icon-192.png, and apple-touch-icon.png (180x180).
+  See _dev/README.md for the regeneration command.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:512px;height:512px;overflow:hidden}
+body{background:#F2F4EF;display:flex;align-items:center;justify-content:center}
+.mark{
+  width:352px;height:382px;border-radius:64px;background:#fff;
+  border:16px solid #0F2540;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:20px 20px 0 rgba(15,37,64,.9);
+  margin:-10px 20px 20px -10px;
+}
+.top{height:98px;background:#C2452D}
+.day{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  font-family:"Spline Sans Mono",monospace;font-weight:600;
+  font-size:152px;color:#0F2540;padding-bottom:8px;
+}
+</style>
+</head>
+<body>
+  <div class="mark"><div class="top"></div><div class="day">7</div></div>
+</body>
+</html>

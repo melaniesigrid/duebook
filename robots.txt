@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://melaniesigrid.github.io/duebook/sitemap.xml

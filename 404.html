@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page not found — Duebook</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F2540">
+<link rel="icon" href="/duebook/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Wix+Madefor+Text:wght@400;500&family=Spline+Sans+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --paper:#F2F4EF;--ink:#0F2540;--ink-soft:#4A5A70;--ink-faint:#7C8AA0;
+  --green:#157344;--cal-red:#C2452D;
+  --font-display:"Bricolage Grotesque",sans-serif;
+  --font-body:"Wix Madefor Text",sans-serif;
+  --font-mono:"Spline Sans Mono",monospace;
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--ink);font-family:var(--font-body);
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:40px 24px;gap:0;
+}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;
+  font-family:var(--font-display);font-weight:800;font-size:1.22rem;letter-spacing:-.02em;margin-bottom:44px}
+.logo-mark{
+  width:30px;height:32px;border-radius:7px;background:#fff;
+  border:1.5px solid var(--ink);display:flex;flex-direction:column;overflow:hidden;flex:none;
+  box-shadow:2px 2px 0 rgba(15,37,64,.9);
+}
+.logo-mark .lm-top{height:9px;background:var(--cal-red)}
+.logo-mark .lm-day{flex:1;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-weight:600;font-size:.72rem;color:var(--ink)}
+.code{font-family:var(--font-mono);font-size:.75rem;letter-spacing:.14em;color:var(--ink-faint);margin-bottom:14px}
+h1{font-family:var(--font-display);font-weight:800;font-size:clamp(2rem,6vw,3rem);
+  letter-spacing:-.03em;line-height:1.06;max-width:16ch}
+p{margin-top:18px;color:var(--ink-soft);font-size:1.05rem;max-width:40ch;line-height:1.55}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;margin-top:32px;
+  background:var(--ink);color:#fff;text-decoration:none;
+  font-weight:600;font-size:.95rem;padding:.85em 1.5em;border-radius:999px;
+  transition:background .18s ease,transform .18s ease;
+}
+.btn:hover{background:var(--green);transform:translateY(-2px)}
+.made{margin-top:56px;font-family:var(--font-mono);font-size:.7rem;color:var(--ink-faint);letter-spacing:.02em}
+.made a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px solid transparent}
+.made a:hover{border-bottom-color:var(--green);color:var(--green)}
+</style>
+</head>
+<body>
+  <a class="logo" href="/duebook/">
+    <span class="logo-mark" aria-hidden="true"><span class="lm-top"></span><span class="lm-day">7</span></span>
+    Duebook
+  </a>
+  <p class="code">404</p>
+  <h1>This page isn't due.</h1>
+  <p>The link you followed doesn't exist here. Head back to the front page and we'll get you to the due list.</p>
+  <a class="btn" href="/duebook/">Back to Duebook <span aria-hidden="true">&rarr;</span></a>
+  <p class="made">Made by <a href="https://northboundsoftwarestudio.com">Northbound Software Studio</a></p>
+</body>
+</html>
