@@ -251,7 +251,16 @@ h3{font-size:1.12rem;font-weight:700;letter-spacing:-.01em}
   background:var(--card);border:1px solid var(--line-card);
   border-radius:var(--r-lg);box-shadow:var(--shadow-lg);
 }
-.duelist{width:min(100%,470px);padding:20px 20px 8px}
+.duestack{
+  width:min(100%,470px);
+  filter:drop-shadow(0 4px 10px rgba(15,37,64,.08)) drop-shadow(0 20px 46px rgba(15,37,64,.14));
+}
+.duelist{
+  width:100%;padding:20px 20px 8px;
+  /* squared off + no bottom rule so the torn edge below reads as the same sheet */
+  border-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;
+  box-shadow:none;
+}
 .duelist-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:0 4px 14px;border-bottom:1px solid var(--line-card)}
 .duelist-head h3{font-size:1.02rem}
 .duelist-head .count{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-faint)}
@@ -289,14 +298,23 @@ h3{font-size:1.12rem;font-weight:700;letter-spacing:-.01em}
 .mini-btn.solid:hover{background:#0F5C36}
 .mini-btn:not(.solid):hover{background:var(--slate-bg)}
 
-/* torn tear-off edge under the due list, like a desk calendar page */
+/* torn tear-off edge under the due list, like a desk calendar page.
+   Two stacked zigzags: the parent paints the card's border color, the ::before
+   paints the paper 1px inset, so the hairline follows the teeth and meets the
+   card's left/right borders instead of stopping at a rounded corner. */
 .tear{
-  width:min(100%,470px);height:14px;margin-top:-2px;
-  background:
-    linear-gradient(-45deg, transparent 7px, var(--card) 0) 0 0/14px 100% repeat-x,
-    linear-gradient(45deg, transparent 7px, var(--card) 0) 7px 0/14px 100% repeat-x;
-  filter:drop-shadow(0 10px 12px rgba(15,37,64,.1));
+  position:relative;width:100%;height:15px;
 }
+.tear::before{
+  content:"";position:absolute;inset:-1px 1px 1px;
+}
+.tear,.tear::before{
+  background:
+    linear-gradient(-45deg, transparent 7px, var(--tear-c) 0) 0 0/14px 100% repeat-x,
+    linear-gradient(45deg, transparent 7px, var(--tear-c) 0) 7px 0/14px 100% repeat-x;
+}
+.tear{--tear-c:var(--line-card)}
+.tear::before{--tear-c:var(--card)}
 
 /* ---------- sections ---------- */
 section{padding:76px 0}
@@ -579,51 +597,53 @@ footer{border-top:1px solid var(--line);padding:36px 0 44px;position:relative;z-
     </div>
 
     <div class="mock-stage rise d4" aria-label="Product preview: a due list with a drafted reminder email">
-      <div class="mock-card duelist">
-        <div class="duelist-head">
-          <h3>Due this week</h3>
-          <span class="count">4 of 212 customers</span>
-        </div>
-
-        <div class="duerow">
-          <div class="cal cal-green"><span class="cal-m">Aug</span><span class="cal-d">08</span></div>
-          <div class="who">
-            <strong>Dana Okafor</strong>
-            <span>Furnace tune-up · last visit Oct 12</span>
-            <div class="ivl"><div class="ivl-fill" data-p="100"></div><span class="ivl-dot"></span></div>
+      <div class="duestack">
+        <div class="mock-card duelist">
+          <div class="duelist-head">
+            <h3>Due this week</h3>
+            <span class="count">4 of 212 customers</span>
           </div>
-          <span class="chip chip-due">Due now</span>
-        </div>
 
-        <div class="duerow">
-          <div class="cal"><span class="cal-m">Aug</span><span class="cal-d">14</span></div>
-          <div class="who">
-            <strong>Marcus Reid</strong>
-            <span>Oil change + rotation · last visit Feb 14</span>
-            <div class="ivl"><div class="ivl-fill amber" data-p="86"></div><span class="ivl-dot amber" style="right:14%"></span></div>
+          <div class="duerow">
+            <div class="cal cal-green"><span class="cal-m">Aug</span><span class="cal-d">08</span></div>
+            <div class="who">
+              <strong>Dana Okafor</strong>
+              <span>Furnace tune-up · last visit Oct 12</span>
+              <div class="ivl"><div class="ivl-fill" data-p="100"></div><span class="ivl-dot"></span></div>
+            </div>
+            <span class="chip chip-due">Due now</span>
           </div>
-          <span class="chip chip-soon">Coming due</span>
-        </div>
 
-        <div class="duerow">
-          <div class="cal cal-grey"><span class="cal-m">Aug</span><span class="cal-d">21</span></div>
-          <div class="who">
-            <strong>Priya Sharma</strong>
-            <span>Hygiene recall · last visit Feb 21</span>
+          <div class="duerow">
+            <div class="cal"><span class="cal-m">Aug</span><span class="cal-d">14</span></div>
+            <div class="who">
+              <strong>Marcus Reid</strong>
+              <span>Oil change + rotation · last visit Feb 14</span>
+              <div class="ivl"><div class="ivl-fill amber" data-p="86"></div><span class="ivl-dot amber" style="right:14%"></span></div>
+            </div>
+            <span class="chip chip-soon">Coming due</span>
           </div>
-          <span class="chip chip-sent">Reminder sent</span>
-        </div>
 
-        <div class="duerow">
-          <div class="cal cal-grey"><span class="cal-m">Sep</span><span class="cal-d">01</span></div>
-          <div class="who">
-            <strong>Tom Ellis</strong>
-            <span>Membership renewal · joined Sep 2024</span>
+          <div class="duerow">
+            <div class="cal cal-grey"><span class="cal-m">Aug</span><span class="cal-d">21</span></div>
+            <div class="who">
+              <strong>Priya Sharma</strong>
+              <span>Hygiene recall · last visit Feb 21</span>
+            </div>
+            <span class="chip chip-sent">Reminder sent</span>
           </div>
-          <span class="chip chip-booked">Booked</span>
+
+          <div class="duerow">
+            <div class="cal cal-grey"><span class="cal-m">Sep</span><span class="cal-d">01</span></div>
+            <div class="who">
+              <strong>Tom Ellis</strong>
+              <span>Membership renewal · joined Sep 2024</span>
+            </div>
+            <span class="chip chip-booked">Booked</span>
+          </div>
         </div>
+        <div class="tear" aria-hidden="true"></div>
       </div>
-      <div class="tear" aria-hidden="true"></div>
 
       <div class="mock-card email-card">
         <div class="email-head">
