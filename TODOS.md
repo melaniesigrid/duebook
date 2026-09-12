@@ -8,7 +8,7 @@
 
 **Why:** The hero card uses CSS techniques that are well supported but not visually verified outside Chromium: `filter: drop-shadow()` on a non-positioned wrapper, a custom property (`--tear-c`) consumed inside a `background` gradient shorthand, and a `::before` zigzag positioned with a negative `inset`. A rendering difference here would land on the first screen of the site.
 
-**Context:** The torn-paper edge under the "Due this week" card was rebuilt on 2026-08-10 (see `.duestack` / `.tear` in `index.html`). Verification at the time was headless Chromium only, at 1280px and 390px. Nothing suggests a problem — these features have been baseline for years — but the hero is the highest-visibility element on the page and nobody has looked at it in another engine.
+**Context:** The torn-paper edge under the "Due this week" card was rebuilt on 2026-08-10 (see `.duestack` / `.tear` in `index.html`). Verification at the time was headless Chromium only, at 1280px and 390px. Nothing suggests a problem (these features have been baseline for years) but the hero is the highest-visibility element on the page and nobody has looked at it in another engine.
 
 **Effort:** S
 **Priority:** P3

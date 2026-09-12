@@ -1,4 +1,4 @@
-# _dev — asset sources
+# _dev: asset sources
 
 These files are not served. They're the sources the shipped images are rendered
 from, kept in the repo so the assets can be regenerated instead of redrawn.
@@ -22,11 +22,11 @@ sips -s format jpeg -s formatOptions 88 -z 630 1200 /tmp/og.png --out og-image.j
 ```
 
 Rendered at 2× and downsampled so the type stays crisp. Keep it at exactly
-1200×630 — that's the aspect ratio every scraper crops to.
+1200×630. That's the aspect ratio every scraper crops to.
 
 ## icon-512.png, icon-192.png, apple-touch-icon.png
 
-Source: `icon-template.html` — the tear-off calendar mark on Duebook paper.
+Source: `icon-template.html`, the tear-off calendar mark on Duebook paper.
 
 ```bash
 $B viewport 512x512 --scale 2
